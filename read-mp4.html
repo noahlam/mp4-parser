@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="./reading-utils.js"></script>
+<script src="./parser.js"></script>
+<body onload="loadFile()">
+    <input type="file" onchange="handleFileChange(this)">
+
+    <script>
+        /**
+        * 加载文件
+        */
+         async function loadFile() {
+            const url = 'http://localhost/d/v1.mp4';
+            const res = await fetch(url)
+            const ab = await res.arrayBuffer();
+            processMp4Data(ab); 
+        }
+        /**
+        * 处理视频文件数据
+        */
+        function processMp4Data(ab){
+            const data = new Uint8Array(ab);
+            const pos1 = readBox(data, 0);
+            console.error('-----------------------');
+            const pos2 = readBox(data, pos1);
+            console.error('-----------------------'); 
+            const pos3 = readBox(data, pos2);
+            console.error('-----------------------'); 
+            const pos4 = readBox(data, pos3);
+            // console.error('-----------------------'); 
+            // const pos5 = readBox(data, pos4);
+            // console.error('-----------------------'); 
+            // const pos6 = readBox(data, pos5);
+            // console.log(data);
+        }
+
+
+        /**
+        * 监听文件变化
+        */
+        async function handleFileChange(e) {
+            const file = e.files[0];
+            const ab = await readFile(file);
+            processMp4Data(ab); 
+        }
+
+        /**
+        * 读取文件
+        */
+        async function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const fr = new FileReader();
+                fr.onload = e => {
+                    resolve(e.target.result);
+                };
+
+                fr.onerror = e => {
+                    reject(e);
+                };
+
+                fr.readAsArrayBuffer(file);
+            });
+        }
+    </script>
+</body>
+
+</html>

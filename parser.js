@@ -1,3 +1,5 @@
+let pathPerfix = '|-';
+
 const BoxParsers = {
     ftyp(data, pos, length) {
         const isom = readString(data, pos, 4);
@@ -32,9 +34,13 @@ const BoxParsers = {
     free: skipBox,
     edts: skipBox,
     tmcd: skipBox,
+    mp4a: skipBox,
+
     moov: iterateBox,
     trak: iterateBox,
     minf: iterateBox,
+    dinf: iterateBox,
+    stbl: iterateBox,
 
     /** 
     * box size	4	box大小
@@ -55,51 +61,51 @@ const BoxParsers = {
     mvhd(data, pos, length) {
         const version = readInt(data, pos, 1);
         pos += 1;
-        console.log('|---- box版本', version);
+        console.log('pathPerfix box版本', version);
 
         const flags = readInt(data, pos, 3);
         pos += 3;
-        console.log('|---- flags', flags);
+        console.log(pathPerfix + ' flags', flags);
 
         const creation = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- creation', creation);
+        console.log(pathPerfix + ' creation', creation);
 
         const modification = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- modification', modification);
+        console.log(pathPerfix + ' modification', modification);
 
         const timescale = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- timescale', timescale);
+        console.log(pathPerfix + ' timescale', timescale);
 
         const duration = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- duration', duration);
+        console.log(pathPerfix + ' duration', duration);
 
         const rate = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- rate', rate);
+        console.log(pathPerfix + ' rate', rate);
 
         const volume = readInt(data, pos, 2);
         pos += 2;
-        console.log('|---- volume', volume);
+        console.log(pathPerfix + ' volume', volume);
 
         const reserved = read(data, pos, 10);
         pos += 10;
-        console.log('|---- 保留位', reserved);
+        console.log(pathPerfix + ' 保留位', reserved);
 
         const matrix = read(data, pos, 36);
         pos += 36;
-        console.log('|---- 视频转换矩阵', matrix);
+        console.log(pathPerfix + ' 视频转换矩阵', matrix);
 
         const preDefined = read(data, pos, 24);
         pos += 24;
-        console.log('|---- preDefined', preDefined);
+        console.log(pathPerfix + ' preDefined', preDefined);
 
         const nextTrackId = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- nextTrackId', nextTrackId);
+        console.log(pathPerfix + ' nextTrackId', nextTrackId);
 
         return pos;
     },
@@ -126,63 +132,63 @@ const BoxParsers = {
     tkhd(data, pos, length) {
         const version = readInt(data, pos, 1);
         pos += 1;
-        console.log('|---- tkhd版本', version);
+        console.log(pathPerfix + ' tkhd版本', version);
 
         const flags = readInt(data, pos, 3);
         pos += 3;
-        console.log('|---- flags', flags);
+        console.log(pathPerfix + ' flags', flags);
 
         const creation = read(data, pos, 4);
         pos += 4;
-        console.log('|---- creation', creation);
+        console.log(pathPerfix + ' creation', creation);
 
         const modification = read(data, pos, 4);
         pos += 4;
-        console.log('|---- modification', modification);
+        console.log(pathPerfix + ' modification', modification);
 
         const trackId = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- trackId', trackId);
+        console.log(pathPerfix + ' trackId', trackId);
 
         let reserved = read(data, pos, 4);
         pos += 4;
-        console.log('|---- 保留位0', reserved);
+        console.log(pathPerfix + ' 保留位0', reserved);
 
         const duration = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- duration', duration);
+        console.log(pathPerfix + ' duration', duration);
 
         reserved = read(data, pos, 8);
         pos += 8;
-        console.log('|---- 保留位1', reserved);
+        console.log(pathPerfix + ' 保留位1', reserved);
 
         const layer = readInt(data, pos, 2);
         pos += 2;
-        console.log('|---- 视频层', layer);
+        console.log(pathPerfix + ' 视频层', layer);
 
         const alternateGroup = readInt(data, pos, 2);
         pos += 2;
-        console.log('|---- track 分组信息', alternateGroup);
+        console.log(pathPerfix + ' track 分组信息', alternateGroup);
 
         const volume = readInt(data, pos, 2);
         pos += 2;
-        console.log('|---- volume', volume);
+        console.log(pathPerfix + ' volume', volume);
 
         reserved = read(data, pos, 2);
         pos += 2;
-        console.log('|---- 保留位2', reserved);
+        console.log(pathPerfix + ' 保留位2', reserved);
 
         const matrix = read(data, pos, 36);
         pos += 36;
-        console.log('|---- 视频转换矩阵', matrix);
+        console.log(pathPerfix + ' 视频转换矩阵', matrix);
 
         const width = read(data, pos, 4);
         pos += 4;
-        console.log('|---- width', width);
+        console.log(pathPerfix + ' width', width);
 
         const height = read(data, pos, 4);
         pos += 4;
-        console.log('|---- height', height);
+        console.log(pathPerfix + ' height', height);
 
         return pos;
 
@@ -201,39 +207,37 @@ const BoxParsers = {
      * pre-defined	2	 
      */
     mdhd(data, pos, length) {
-
-
         const version = readInt(data, pos, 1);
         pos += 1;
-        console.log('|---- mdhd版本', version);
+        console.log(pathPerfix + ' 版本', version);
 
         const flags = readInt(data, pos, 3);
         pos += 3;
-        console.log('|---- flags', flags);
+        console.log(pathPerfix + ' flags', flags);
 
         const creation = read(data, pos, 4);
         pos += 4;
-        console.log('|---- creation', creation);
+        console.log(pathPerfix + ' creation', creation);
 
         const modification = read(data, pos, 4);
         pos += 4;
-        console.log('|---- modification', modification);
+        console.log(pathPerfix + ' modification', modification);
 
         const timescale = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- timescale', timescale);
+        console.log(pathPerfix + ' timescale', timescale);
 
         const duration = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- duration', duration);
+        console.log(pathPerfix + ' duration', duration);
 
         const language = read(data, pos, 2);
         pos += 2;
-        console.log('|---- language', language);
+        console.log(pathPerfix + ' language', language);
 
         const preDefined = read(data, pos, 2);
         pos += 2;
-        console.log('|---- preDefined', preDefined);
+        console.log(pathPerfix + ' preDefined', preDefined);
 
         return pos;
 
@@ -252,27 +256,27 @@ const BoxParsers = {
     hdlr(data, pos, length) {
         const version = readInt(data, pos, 1);
         pos += 1;
-        console.log('|---- mdhd版本', version);
+        console.log(pathPerfix + ' 版本', version);
 
         const flags = readInt(data, pos, 3);
         pos += 3;
-        console.log('|---- flags', flags);
+        console.log(pathPerfix + ' flags', flags);
 
         const preDefined = read(data, pos, 4);
         pos += 4;
-        console.log('|---- preDefined', preDefined);
+        console.log(pathPerfix + ' preDefined', preDefined);
 
         const handleType = readString(data, pos, 4);
         pos += 4;
-        console.log('|---- handleType', handleType);
+        console.log(pathPerfix + ' handleType', handleType);
 
         const reserved = read(data, pos, 12);
         pos += 12;
-        console.log('|---- reserved', reserved);
+        console.log(pathPerfix + ' reserved', reserved);
 
         const { str: name, length: len } = readStringUntil(data, pos, '\u0000');
         pos += len;
-        console.log('|---- name', name);
+        console.log(pathPerfix + ' name', name);
 
         return pos;
     },
@@ -290,40 +294,241 @@ const BoxParsers = {
 
         const version = readInt(data, pos, 1);
         pos += 1;
-        console.log('|---- mdhd版本', version);
+        console.log(pathPerfix + ' 版本', version);
 
         const flags = readInt(data, pos, 3);
         pos += 3;
-        console.log('|---- flags', flags);
+        console.log(pathPerfix + ' flags', flags);
 
         const creation = read(data, pos, 4);
         pos += 4;
-        console.log('|---- creation', creation);
+        console.log(pathPerfix + ' creation', creation);
 
         const modification = read(data, pos, 4);
         pos += 4;
-        console.log('|---- modification', modification);
+        console.log(pathPerfix + ' modification', modification);
 
         const timescale = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- timescale', timescale);
+        console.log(pathPerfix + ' timescale', timescale);
 
         const duration = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- duration', duration);
+        console.log(pathPerfix + ' duration', duration);
 
         const language = read(data, pos, 2);
         pos += 2;
-        console.log('|---- language', language);
+        console.log(pathPerfix + ' language', language);
 
         const preDefined = read(data, pos, 2);
         pos += 2;
-        console.log('|---- preDefined', preDefined);
+        console.log(pathPerfix + ' preDefined', preDefined);
 
         return pos;
 
     },
-    
+
+    /**
+     * box size	4	box 大小
+     * box type	4	box 类型
+     * version	1	box 版本, 0或1, 一般为0, (以下字节数均按version=0)
+     * flags	3
+     * balance	2	立体声平衡, [8, 8] 格式值, 一般为0, -1.0 表示全部左声道, 1.0表示全部右声道
+     * reserved	2
+     */
+    smhd(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        const balance = read(data, pos, 2);
+        pos += 2;
+        console.log(pathPerfix + ' balance', balance);
+
+        const reserved = read(data, pos, 2);
+        pos += 2;
+        console.log(pathPerfix + ' reserved', reserved);
+
+        return pos;
+
+    },
+
+    /**
+     * box size	4	box 大小
+     * box type	4	box 类型
+     * version	1	box 版本, 0或1, 一般为0, (以下字节数均按version=0)
+     * flags	3
+     * entry count	4	“url”或”urn”表的元素个数
+     * “url”或”urn”列表	不定
+     * url”或”urn” 都是box, “url”的内容为字符串(location string),
+     * “urn”的内容为一对字符串(name string and location string).
+     * 当”url”或 “urn”的box flags 为1时, 字符串均为空
+     */
+    dref(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        let entryCount = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' entryCount', entryCount);
+
+        while (entryCount > 0){
+            const length = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' box 长度:', length);
+
+            const type = readString(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' box类型:', type);
+
+            pos = BoxParsers[type](data, pos, length - 8);
+            console.error('当前位置: ', pos);
+            entryCount --;
+        }
+
+        return pos;
+
+    },
+
+    'url '(data, pos, length) {
+        const str = readString(data, pos, length);
+        pos += length;
+        console.log(pathPerfix + ' url', str);
+        return pos;
+    },
+    stsd(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        let entryCount = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' entryCount', entryCount);
+
+        while (entryCount > 0){
+            const length = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' box 长度:', length);
+
+            const type = readString(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' box类型:', type);
+
+            pos = BoxParsers[type](data, pos, length - 8);
+            console.error('当前位置: ', pos);
+            entryCount --;
+        }
+
+        return pos;
+    },
+    stts(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        let entryCount = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' entryCount', entryCount);
+
+        while (entryCount > 0){
+            const sample = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' sample:', sample);
+
+            const delta = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' delta:', delta);
+
+            entryCount --;
+        }
+
+        return pos;
+    },
+    stsc(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        let entryCount = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' entryCount', entryCount);
+
+        while (entryCount > 0){
+            const firstChunk = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' firstChunk:', firstChunk);
+
+            const samplePerChunk = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' samplePerChunk:', samplePerChunk);
+
+            const sampleDescriptionIndex = readInt(data, pos, 4);
+            pos += 4;
+            console.log(pathPerfix + ' sampleDescriptionIndex:', sampleDescriptionIndex);
+
+            entryCount --;
+        }
+
+        return pos;
+    },
+    stsz(data, pos, length) {
+        const version = readInt(data, pos, 1);
+        pos += 1;
+        console.log(pathPerfix + ' 版本', version);
+
+        const flags = readInt(data, pos, 3);
+        pos += 3;
+        console.log(pathPerfix + ' flags', flags);
+
+        const commonSampleSize = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' commonSampleSize', commonSampleSize);
+
+
+        let sampleCount = readInt(data, pos, 4);
+        pos += 4;
+        console.log(pathPerfix + ' sampleCount', sampleCount);
+
+        const sampleSizes = [];
+        while (sampleCount > 0){
+            if (commonSampleSize === 0) {
+                const sampleSize = readInt(data, pos, 4);
+                pos += 4;
+
+                sampleSizes.push(sampleSize);
+            } else {
+                // 每个 sampleSize = 外面的那个 commonSampleSize
+                sampleSizes.push(commonSampleSize);
+            }
+
+            sampleCount --;
+        }
+
+        console.log(pathPerfix + ' sampleSizes', sampleSizes);
+
+        return pos;
+    }
 }
 
 function skipBox(data, pos, length) {
@@ -332,20 +537,23 @@ function skipBox(data, pos, length) {
 
 function iterateBox(data, pos, length) {
     const start = pos;
+    const oldPathPerfix = pathPerfix;
+    pathPerfix += '----';
     while (pos < start + length) {
         const length = readInt(data, pos, 4);
         pos += 4;
-        console.log('|---- box 长度:', length);
+        console.log(pathPerfix + ' box 长度:', length);
 
         const type = readString(data, pos, 4);
         pos += 4;
-        console.log('|---- box类型:', type);
+        console.log(pathPerfix + ' box类型:', type);
 
         pos = BoxParsers[type](data, pos, length);
         console.error('当前位置: ', pos);
     }
     console.error('start + length: ', start + length);
     const endPos = start + length;
+    pathPerfix = oldPathPerfix;
     return endPos;
 };
 

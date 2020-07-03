@@ -18,23 +18,24 @@
             const url = 'http://localhost/d/v1.mp4';
             const res = await fetch(url)
             const ab = await res.arrayBuffer();
-            processMp4Data(ab); 
+            processMp4Data(ab);
         }
         /**
         * 处理视频文件数据
         */
         function processMp4Data(ab){
             const data = new Uint8Array(ab);
+            data.pos = 0;
             const pos1 = readBox(data, 0);
             console.error('-----------------------');
             const pos2 = readBox(data, pos1);
-            console.error('-----------------------'); 
+            console.error('-----------------------');
             const pos3 = readBox(data, pos2);
-            console.error('-----------------------'); 
+            console.error('-----------------------');
             const pos4 = readBox(data, pos3);
-            // console.error('-----------------------'); 
+            // console.error('-----------------------');
             // const pos5 = readBox(data, pos4);
-            // console.error('-----------------------'); 
+            // console.error('-----------------------');
             // const pos6 = readBox(data, pos5);
             // console.log(data);
         }
@@ -46,7 +47,7 @@
         async function handleFileChange(e) {
             const file = e.files[0];
             const ab = await readFile(file);
-            processMp4Data(ab); 
+            processMp4Data(ab);
         }
 
         /**
